@@ -2,49 +2,59 @@
  * config.js — Dashboard RH | Desligamentos & Admissões
  * ─────────────────────────────────────────────────────────────────────────────
  * Integração via Google Sheets publicado como CSV (sem CORS, funciona no GitHub Pages)
- * Publicar: Arquivo → Compartilhar → Publicar na web → selecionar aba → CSV
  *
- * ABAS NECESSÁRIAS:
- *   1. DESLIGAMENTOS  — movimentações de saída + headcount por loja
- *   2. ADMISSÕES      — movimentações de entrada + controle de experiência
+ * ✅ Google Sheets configurado e conectado.
+ *    Planilha: DEMISSÕES / ADMISSÕES
+ *    Aba DESLIGAMENTOS → gid=0
+ *    Aba ADMISSÕES     → gid=108144115
+ *
+ * Para trocar a planilha: substitua urlDesligamentos e urlAdmissoes pelos novos links CSV.
+ * Fallback automático: usa data.js se o Sheets estiver inacessível.
  */
 
 const CONFIG = {
 
   // ─── URLs CSV do Google Sheets publicado ─────────────────────────────────
-  // Substitua pelo ID publicado da sua planilha e pelos GIDs de cada aba.
-  // Para encontrar o GID: abra a aba desejada → veja o final da URL (...#gid=XXXXXXX)
-  // Formato: https://docs.google.com/spreadsheets/d/e/{ID_PUBLICADO}/pub?gid={GID}&single=true&output=csv
-  urlDesligamentos: `https://docs.google.com/spreadsheets/d/e/SEU_ID_PUBLICADO/pub?gid=0&single=true&output=csv`,
-  urlAdmissoes:     `https://docs.google.com/spreadsheets/d/e/SEU_ID_PUBLICADO/pub?gid=1&single=true&output=csv`,
+  // Cole aqui os links gerados em "Publicar na web" para cada aba.
+  // Formato esperado: https://docs.google.com/spreadsheets/d/e/{ID_PUBLICADO}/pub?gid={GID}&single=true&output=csv
+  //
+  // ID da planilha (edição): 1qY5kOqLNe5znLK5gIY45ovjIhIQO9wOj242jaD0oTsA
+  // O ID publicado (para CSV) é DIFERENTE — ele aparece no link gerado pelo "Publicar na web".
+  urlDesligamentos: `https://docs.google.com/spreadsheets/d/e/2PACX-1vR6VlmxFL-Bd-A1BwVyTX-n42xWXyEmwogWgSXwMGfFOTjHno1uphUwAFM_-y-SGxV2OEaChDdXsfs9/pub?gid=0&single=true&output=csv`,
+  urlAdmissoes:     `https://docs.google.com/spreadsheets/d/e/2PACX-1vR6VlmxFL-Bd-A1BwVyTX-n42xWXyEmwogWgSXwMGfFOTjHno1uphUwAFM_-y-SGxV2OEaChDdXsfs9/pub?gid=108144115&single=true&output=csv`,
 
-  // Fallback para dados embutidos em data.js se as abas do Sheets falharem
+  // Fallback automático: usa data.js quando as URLs acima estiverem vazias ou inacessíveis
   localFallback: true,
 
   // ─── MAPEAMENTO DE COLUNAS — DESLIGAMENTOS ───────────────────────────────
-  // Cada chave lista os possíveis nomes da coluna na planilha (sem acento, lowercase)
-  // O sistema detecta automaticamente qual nome está sendo usado.
+  // Detecta automaticamente o nome real da coluna na planilha.
+  // Os nomes abaixo estão alinhados com os cabeçalhos reais do seu XLSX.
   colDesligamentos: {
     colaborador:        ['colaborador', 'nome', 'funcionario', 'employee'],
     supervisor:         ['supervisor', 'gestor', 'lider', 'coordenador'],
     gerente:            ['gerente', 'gerente_loja', 'manager', 'responsavel'],
-    cargo:              ['cargo', 'funcao', 'funcção', 'role', 'position', 'funcao'],
+    cargo:              ['cargo', 'funcao', 'funcção', 'role', 'position'],
     municipio:          ['municipio', 'município', 'cidade', 'local', 'localidade', 'regiao', 'região'],
     loja:               ['loja', 'store', 'filial', 'unidade', 'cod_loja'],
-    dataAdmissao:       ['data_admissao', 'data admissao', 'admissao', 'dt_admissao', 'data_admissão', 'data admissão'],
-    dataDesligamento:   ['data_desligamento', 'data desligamento', 'desligamento', 'dt_desligamento', 'data_demissao', 'data demissao'],
-    ultimoDia:          ['ultimo_dia', 'último dia', 'ultimo dia trabalhado', 'último dia trabalhado', 'ultimo_dia_trabalhado'],
+    mes:                ['mes', 'mês', 'month', 'competencia', 'competência'],
+    dataAdmissao:       ['data_admissao', 'data admissão', 'data_admissão', 'dt_admissao', 'admissao'],
+    dataDesligamento:   ['data_desligamento', 'data_demissao', 'desligamento', 'dt_desligamento', 'data desligamento'],
+    ultimoDia:          ['ultimo_dia_trabalho', 'ultimo_dia', 'último dia trabalho', 'ultimo dia trabalhado'],
     vencimentoPgto:     ['vencimento_pagamento', 'vencimento pagamento', 'vencimento', 'dt_vencimento', 'prazo_pagamento'],
     statusPagamento:    ['status_pagamento', 'status pagamento', 'pagamento', 'situacao_pagamento'],
     aso:                ['aso', 'exame', 'exame_demissional', 'exame demissional'],
+    documento:          ['documento', 'tipo_documento', 'doc'],
     tipoDesligamento:   ['tipo_desligamento', 'tipo desligamento', 'tipo', 'motivo', 'motivo_desligamento'],
-    statusProcesso:     ['status_processo', 'status processo', 'processo', 'situacao_processo'],
+    statusProgresso:    ['status_progresso', 'status progresso', 'processo', 'situacao_processo', 'status_processo'],
     statusPrazo:        ['status_prazo', 'status prazo', 'prazo', 'situacao_prazo'],
-    colaboradoresAtivos:['colaboradores_ativos', 'colaboradores ativos', 'ativos', 'headcount', 'efetivo', 'quadro', 'ativos_atuais'],
+    colaboradoresAtivos:['colaboradores_ativos', 'colaboradores ativos', 'ativos', 'headcount', 'efetivo', 'quadro'],
     tempoEmpresa:       ['tempo_empresa', 'tempo empresa', 'tempo_de_empresa', 'antiguidade'],
   },
 
   // ─── MAPEAMENTO DE COLUNAS — ADMISSÕES ───────────────────────────────────
+  // Alinhado com os cabeçalhos reais: COLABORADOR, SUPERVISOR, GERENTE, CARGO,
+  // MUNICÍPIO, LOJA, ADMISSÃO, MÊS, ASO, STATUS_ADMISSÕES, SOLICITAÇÃO,
+  // VENC_CONTRATAÇÃO, EXP_30, EXP_90, COLABORADORES_ATIVOS
   colAdmissoes: {
     colaborador:        ['colaborador', 'nome', 'funcionario', 'employee'],
     supervisor:         ['supervisor', 'gestor', 'lider', 'coordenador'],
@@ -52,40 +62,35 @@ const CONFIG = {
     cargo:              ['cargo', 'funcao', 'funcção', 'role', 'position'],
     municipio:          ['municipio', 'município', 'cidade', 'local', 'localidade', 'regiao', 'região'],
     loja:               ['loja', 'store', 'filial', 'unidade', 'cod_loja'],
-    dataAdmissao:       ['admissao', 'admissão', 'data_admissao', 'data admissao', 'dt_admissao', 'data_admissão'],
-    solicitacao:        ['solicitacao', 'solicitação', 'data_solicitacao', 'data solicitacao', 'abertura'],
-    vencimentoContrat:  ['vencimento_contratacao', 'vencimento contratacao', 'vencimento_contratação', 'prazo_contratacao', 'prazo contratacao'],
-    exp30:              ['exp_30', 'exp30', 'experiencia_30', 'experiência 30', '30_dias', 'venc_30'],
-    exp90:              ['exp_90', 'exp90', 'experiencia_90', 'experiência 90', '90_dias', 'venc_90'],
+    dataAdmissao:       ['admissao', 'admissão', 'data_admissao', 'data_admissão', 'dt_admissao'],
+    mes:                ['mes', 'mês', 'month', 'competencia'],
     aso:                ['aso', 'exame', 'exame_admissional', 'exame admissional'],
-    statusAdm:          ['status_adm', 'status adm', 'status_admissao', 'status admissao', 'situacao', 'status'],
-    tempoEmpresaAtual:  ['tempo_empresa_atual', 'tempo empresa atual', 'tempo_atual', 'antiguidade_atual'],
+    statusAdm:          ['status_admissoes', 'status_admissão', 'status admissoes', 'status_adm', 'situacao', 'status'],
+    solicitacao:        ['solicitacao', 'solicitação', 'data_solicitacao', 'abertura'],
+    vencContratacao:    ['venc_contratacao', 'venc_contratação', 'vencimento_contratacao', 'prazo_contratacao'],
+    exp30:              ['exp_30', 'exp30', 'experiencia_30', '30_dias', 'venc_30'],
+    exp90:              ['exp_90', 'exp90', 'experiencia_90', '90_dias', 'venc_90'],
+    colaboradoresAtivos:['colaboradores_ativos', 'colaboradores ativos', 'ativos', 'headcount', 'efetivo'],
   },
 
   // ─── SEMÁFORO DE PRAZO ────────────────────────────────────────────────────
-  // Define os limites em dias para classificação de status de prazo
   semaforo: {
-    diasAvisoAntecipado: 5,   // amarelo: vence em até N dias
-    // vermelho: já venceu (data < hoje)
-    // verde:    vence em mais de N dias
+    diasAvisoAntecipado: 5,  // amarelo: vence em até 5 dias | vermelho: já venceu | verde: ok
   },
 
   /**
-   * Calcula o status do semáforo com base na data de vencimento.
-   * @param {Date|null} dataVenc — data de vencimento parseada
+   * Calcula status do semáforo com base na data de vencimento.
+   * @param {Date|null} dataVenc
    * @returns {'verde'|'amarelo'|'vermelho'|'sem_prazo'}
    */
   calcSemaforo(dataVenc) {
     if (!dataVenc || isNaN(dataVenc.getTime())) return 'sem_prazo';
-    const hoje    = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const venc    = new Date(dataVenc);
-    venc.setHours(0, 0, 0, 0);
-    const diffMs  = venc - hoje;
-    const diffDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDias < 0)                              return 'vermelho';  // vencido
-    if (diffDias <= this.semaforo.diasAvisoAntecipado) return 'amarelo';  // vencendo
-    return 'verde';                                                     // no prazo
+    const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+    const venc = new Date(dataVenc); venc.setHours(0, 0, 0, 0);
+    const dias = Math.ceil((venc - hoje) / 86400000);
+    if (dias < 0)                                  return 'vermelho';
+    if (dias <= this.semaforo.diasAvisoAntecipado) return 'amarelo';
+    return 'verde';
   },
 
   // ─── FÓRMULA OFICIAL DE TURNOVER ─────────────────────────────────────────
@@ -95,22 +100,21 @@ const CONFIG = {
     return ((admissoes + desligamentos) / 2 / headcount) * 100;
   },
 
-  // ─── ALIASES DE STATUS — PAGAMENTO ───────────────────────────────────────
-  // Valores que indicam pagamento ainda pendente (normalizado, sem acento)
+  // ─── ALIASES DE STATUS — PAGAMENTO PENDENTE ──────────────────────────────
   statusPagamentoPendente: [
     'pendente', 'aguardando', 'a pagar', 'nao pago', 'em aberto', 'aberto',
-    'nao realizado', 'nao efetuado', 'aguarda', 'atrasado',
+    'nao realizado', 'nao efetuado', 'atrasado', 'vence hoje', 'vence em breve',
   ],
 
   // ─── ALIASES DE STATUS — ASO PENDENTE ────────────────────────────────────
   statusAsoPendente: [
-    'pendente', 'aguardando', 'nao realizado', 'nao efetuado', 'nao agendado',
-    'em aberto', 'aberto', 'a realizar', 'nao feito',
+    'pendente', 'aguardando', 'nao realizado', 'nao efetuado',
+    'em aberto', 'a realizar', 'nao feito', 'agendado',
   ],
 
   // ─── ALIASES DE STATUS ADMISSÃO — PENDENTES ──────────────────────────────
   statusAdmPendente: [
-    'pendente', 'em andamento', 'aguardando', 'aberto', 'em aberto',
+    'pendente', 'em andamento', 'aguardando', 'aberto',
     'nao concluido', 'incompleto', 'processando',
   ],
 
